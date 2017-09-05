@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS raw_schedule;
 CREATE TABLE raw_schedule(
     team_id int,
     team_name varchar(50),
-    game_date date,
+    game_date varchar(50),
     opp_id int,
     opp_name varchar(50),
     team_score int,
@@ -22,11 +22,11 @@ CREATE TABLE raw_schedule(
     location varchar(20)
 );
 
-DROP TABLE IF EXISTS raw_offence;
-CREATE TABLE raw_offence(
+DROP TABLE IF EXISTS raw_offense;
+CREATE TABLE raw_offense(
     team_id int,
     team_name varchar(50),
-    game_date date,
+    game_date varchar(50),
     uniform_num int,
     lname varchar(25),
     fname varchar(25),
@@ -61,16 +61,25 @@ CREATE TABLE raw_offence(
     ko_ret_yards int,
     ko_ret_td int,
     ttl_td int,
+    off_xpts_kck_att int,
+    off_xpts_kck_cmp int,
+    off_xpts_rp_att int,
+    off_xpts_rp_cmp int,
+    def_xpts_kck_att int,
+    def_xpts_kck_cmp int,
+    def_xpts_intcfum_att int,
+    def_xpts_intcfum_cmp int,
+    fg_att int,
+    fg_cmp int,
+    safty int,
+    ttl_pts int
+);
 
-
-)
-
-)
 DROP TABLE IF EXISTS raw_defense;
 CREATE TABLE raw_defense(
     team_id int,
     team_name varchar(50),
-    game_date date,
+    game_date varchar(50),
     uniform_num int,
     lname varchar(25),
     fname varchar(25),
