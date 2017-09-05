@@ -66,7 +66,25 @@ CREATE TABLE raw_offence(
 )
 
 )
-DROP TABLE IF EXISTS team;
-CREATE TABLE team(
-
-)
+DROP TABLE IF EXISTS raw_defense;
+CREATE TABLE raw_defense(
+    team_id int,
+    team_name varchar(50),
+    game_date date,
+    uniform_num int,
+    lname varchar(25),
+    fname varchar(25),
+    tckl_unasst int,
+    tckl_asst int,
+    tckl_loss_unasst int,
+    tckl_loss_asst int,
+    tckl_loss_yards int,
+    sack_unasst int,
+    sack_asst int,
+    sack_yards int,
+    sack_cmp int,
+    pass_brkup int,
+    forcd_fum int,
+    qb_hurries int,
+    blckd_kcks int
+);
