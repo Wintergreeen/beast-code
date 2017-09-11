@@ -4,7 +4,8 @@
 *
 * Project: beastcode
 * File: create_tables.sql
-* Description: Creates database schema and tables for the beastcode project
+* Description: Creates database schema and tables for the RAW tables
+*
 */
 
 CREATE DATABASE IF NOT EXISTS league;
@@ -96,4 +97,18 @@ CREATE TABLE raw_defense(
     forcd_fum int,
     qb_hurries int,
     blckd_kcks int
+);
+
+DROP TABLE IF EXISTS raw_schools;
+CREATE TABLE raw_schools(
+	team_id int,
+    station_id VARCHAR(20)
+);
+
+DROP TABLE IF EXISTS raw_weather;
+CREATE TABLE raw_weather(
+    station_id VARCHAR (20),
+    raw_date VARCHAR(30),
+    prcp VARCHAR (8),
+    snow VARCHAR (8)
 );

@@ -12,17 +12,25 @@ from _datetime import datetime
 import MySQLdb
 from sqlalchemy import create_engine
 
-def get_year_of_data(conn, client, station_list, year):
+def connect():
+    '''
+    Callable required to create a sql alchemy engine
+    :return: connection to db
+    '''
+    return MySQLdb.connect(host='localhost', port=3306, user='root', passwd="#########", db='league')
+
+def get_year_of_data(client, station_list, year):
 
     startdate = datetime(year, 8, 1)
     enddate = datetime((year+1), 2, 1)
 
-    # DataFrame to iterate through for stations
+    # DataFrame to iterate through for stations cdo_api function required
     frame = {'id': station_list}
     stations = pd.DataFrame(data=frame)
 
-    # DataFrame for all results
-    big_frame = pd.DataFrame()
+    # Create a SqlAlchemy engine with the existing connection, then passed into pandas.to_sql
+    db_engine = create_engine('mysql://', creator=connect)
+
     for rows, station in stations.iterrows():
         station_data = client.get_data_by_station(
             datasetid='GHCND',
@@ -32,18 +40,15 @@ def get_year_of_data(conn, client, station_list, year):
             return_dataframe=True
             # include_station_meta=True
         )
+        # Create new DataFrame limiting columns (we don't want ALL of the station data)
         columns = ['station', 'date', 'PRCP', 'SNOW']
         single = pd.DataFrame(station_data, columns=columns)
-        big_frame = pd.concat([big_frame, single])
-        # pprint(single)
-    # Create a SqlAlchemy engine with the existing connection, then passed into pandas.to_sql
-    db_engine = create_engine('mysql://', creator=conn)
-    big_frame.to_sql(con=db_engine, name='raw_weather',if_exists='replace')
-    conn.commit()
+        # Send to database
+        single.to_sql(con=db_engine, name='raw_weather',if_exists='append')
+
 
 # Connect to DB
-password = input("Please enter a password for DB: ")
-conn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd=password, db='league')
+conn = connect()
 cursor = conn.cursor()
 
 # Get list of stations
@@ -51,15 +56,11 @@ cursor.execute('SELECT DISTINCT station_id FROM team')
 station_list = [ row[0] for row in cursor.fetchall()]
 
 # Set params for API call
-token = 'IwcNfdENuPAzCSYdQBXoxjkhqWiBxJpM'
+token = '#############'
 client = Client(token, default_units='metric', default_limit=1000)
 
-get_year_of_data(conn, client, station_list, 2008)
+for years in range(2008,2013):
+    get_year_of_data(client, station_list, years)
 
 
 conn.close()
-
-
-
-
-

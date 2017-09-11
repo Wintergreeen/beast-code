@@ -30,8 +30,8 @@ INSERT INTO team (team_id, team_name, station_id)
 			rw_schl.team_name,
             rw_skool.station_id
 		FROM raw_schools AS rw_skool
-            JOIN (SELECT * FROM raw_schedule GROUP BY team_id ) AS rw_schl
-                USING(team_id);
+        JOIN (SELECT * FROM raw_schedule GROUP BY team_id ) AS rw_schl ON 1=1
+            AND rw_skool.team_id = rw_schl.team_id;
 
 CREATE TABLE game(
     game_id INT NOT NULL AUTO_INCREMENT,
@@ -86,6 +86,8 @@ CREATE TABLE preformance(
         REFERENCES game(game_id)
 );
 
+CREATE INDEX idx_gameid ON performance (game_id);
+
 
 INSERT INTO preformance(player_id, game_id, rush_net, rush_td, pass_yards, pass_td, ttl_yards, ttl_td)
    SELECT DISTINCT
@@ -98,11 +100,29 @@ INSERT INTO preformance(player_id, game_id, rush_net, rush_td, pass_yards, pass_
        raw.ttl_yards,
        raw.ttl_td
    FROM player
-   JOIN team ON player.team_id = team.team_id
-   JOIN game ON team.team_id = game.team_1_id
-   JOIN raw_offense raw
-       WHERE 1=1
+   JOIN team ON 1=1
+        AND player.team_id = team.team_id
+   JOIN game ON 1=1
+        AND team.team_id = game.team_1_id
+   JOIN raw_offense raw ON 1=1
+   WHERE 1=1
        AND game.game_date = STR_TO_DATE(raw.game_date, '%m/%d/%y')
        AND	player.lname = raw.lname
        AND player.fname = raw.fname
        AND team.team_id = raw.team_id;
+
+SET FOREIGN_KEY_CHECKS=0;
+
+ALTER TABLE game
+   ADD CONSTRAINT fk_game_t1
+       FOREIGN KEY(team_1_id)
+       REFERENCES team(team_id)
+       ON UPDATE CASCADE;
+
+ALTER TABLE game
+   ADD CONSTRAINT fk_game_t2
+       FOREIGN KEY(team_2_id)
+       REFERENCES team(team_id)
+       ON UPDATE CASCADE;
+
+SET FOREIGN_KEY_CHECKS=1;
