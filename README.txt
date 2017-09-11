@@ -19,6 +19,7 @@ The following files must be executed in exact order
 	-Migrates data from raw tables into usefull tables in schema --not including weather
 5. get_noaa_data.py 
 	- Downloads NOAA data into raw_weather table (This takes awhile)
-6. migrate_weather.sql
+6. modify_weather.sql
 	- Migrates data from raw_weather to weather table
-
+7. create_data_view.sql
+    - creates a formated table of aggregate data (e.g. team rushing strength for a given game) for direct queries by analytic tools
