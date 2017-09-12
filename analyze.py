@@ -32,7 +32,7 @@ def printStats(array):
 
 if __name__ == "__main__":
     #Connect to database
-    conn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd="Rafik!is@RapG0d", db='league')
+    conn = MySQLdb.connect(host='localhost', port=3306, user='root', passwd="#########", db='league')
     curs = conn.cursor()
     print("Loading data... \n")
     # General Query
